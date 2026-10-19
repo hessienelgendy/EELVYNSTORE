@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 560" role="img" aria-labelledby="title description">
+  <title id="title">Electronics</title><desc id="description">Wireless headphones and a smart speaker.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dce9e9"/><stop offset="1" stop-color="#edf1ea"/></linearGradient><linearGradient id="device" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#526d68"/><stop offset="1" stop-color="#1e3537"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="12" stdDeviation="10" flood-opacity=".15"/></filter></defs>
+  <rect width="480" height="560" rx="32" fill="url(#bg)"/><circle cx="380" cy="105" r="70" fill="#fff" opacity=".32"/><circle cx="92" cy="410" r="93" fill="#d3dfd7" opacity=".55"/>
+  <text x="38" y="55" fill="#57736b" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="3">SMART LIVING</text>
+  <g filter="url(#s)"><path d="M128 294v-67c0-75 43-121 112-121s112 46 112 121v67" fill="none" stroke="url(#device)" stroke-width="33" stroke-linecap="round"/><rect x="103" y="251" width="67" height="123" rx="30" fill="#263d3d"/><rect x="310" y="251" width="67" height="123" rx="30" fill="#263d3d"/><rect x="119" y="268" width="35" height="87" rx="17" fill="#90aaa0"/><rect x="326" y="268" width="35" height="87" rx="17" fill="#90aaa0"/><rect x="183" y="375" width="116" height="104" rx="30" fill="url(#device)"/><circle cx="241" cy="426" r="28" fill="#9db9ae"/><circle cx="241" cy="426" r="13" fill="#3d5b54"/><path d="M205 461h72" stroke="#dbe8df" stroke-width="4" stroke-linecap="round"/></g>
+  <text x="38" y="515" fill="#314b44" font-family="Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="2">TECH, MADE SIMPLE</text>
+</svg>

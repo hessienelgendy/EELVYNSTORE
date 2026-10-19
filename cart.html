@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELVYN | السلة</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="scripts/supabase-config.js"></script>
+  <script src="scripts/supabase-client.js"></script>
+  <style>
+    :root {
+      --bg: #f5f3ee;
+      --surface: #ffffff;
+      --text: #123235;
+      --muted: #5f7175;
+      --primary: #123235;
+      --primary-soft: #4aa1a0;
+      --border: rgba(18, 50, 53, 0.12);
+      --shadow: rgba(18, 50, 53, 0.10);
+      --sale: #ff6f61;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      direction: rtl;
+    }
+    a { text-decoration: none; color: inherit; }
+    button, input, select, textarea { font: inherit; }
+    .page { max-width: 1100px; margin: 28px auto; padding: 0 16px; }
+    .topbar {
+      background: var(--primary);
+      color: #fff;
+      padding: 18px 20px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .topbar h1 { margin: 0; font-size: 1.8rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 18px 30px var(--shadow);
+    }
+    .cart-items { display: grid; gap: 14px; }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cart-item strong { display: block; }
+    .remove-btn {
+      border: none;
+      background: #d84b4b;
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+    .summary { display: grid; gap: 12px; }
+    .summary h2, .box h2 { margin-top: 0; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .checkout-btn, .continue-btn, .submit-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .checkout-btn, .submit-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-soft));
+      color: #fff;
+    }
+    .continue-btn {
+      background: #edf3f3;
+      color: var(--primary);
+    }
+    .continue-btn, .checkout-btn { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+    .form {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .form-section-title { margin: 4px 0 0; font-size: 15px; }
+    .form-hint { margin: -6px 0 2px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #f9fbfb;
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    .empty-state { color: var(--muted); padding: 20px 0; }
+    .order-success {
+      margin-top: 20px;
+      padding: 22px;
+      border: 1px solid rgba(49, 123, 82, .2);
+      border-radius: 16px;
+      background: #eef8f0;
+      color: #205339;
+    }
+    .order-success h3 { margin: 0 0 8px; }
+    .order-success p { line-height: 1.8; }
+    .success-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .success-actions a {
+      display: inline-flex;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+    }
+    .success-actions .continue-link { background: #fff; color: var(--primary); border: 1px solid var(--border); }
+    [hidden] { display: none !important; }
+    @media (max-width: 768px) {
+      .grid, .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <h1>سلة المشتريات</h1>
+      <a href="index.html">العودة إلى المتجر</a>
+    </header>
+    <p class="form-hint" id="backendStatus" role="status" hidden></p>
+
+    <div class="grid">
+      <section class="box">
+        <h2>المنتجات</h2>
+        <div id="cartItems" class="cart-items"></div>
+      </section>
+
+      <aside class="box summary">
+        <h2>ملخص الطلب</h2>
+        <div class="summary-row"><span>المجموع</span><strong id="subtotal">0 جنيه</strong></div>
+        <div class="summary-row"><span>الشحن</span><strong id="shippingFee">اختر المحافظة</strong></div>
+        <div class="summary-row"><span>الإجمالي</span><strong id="total">0 جنيه</strong></div>
+        <a class="checkout-btn" href="#shippingDetails">أكمل بيانات الشحن</a>
+        <a class="continue-btn" href="index.html">متابعة التسوق</a>
+      </aside>
+    </div>
+
+    <section class="box" id="shippingDetails" style="margin-top:20px;">
+      <h2>بيانات التوصيل</h2>
+      <p class="form-hint">اكتب بيانات التواصل والعنوان لإرسال طلبك. تأكيد الطلب سيظهر هنا دون مغادرة الصفحة.</p>
+      <form id="orderForm" class="form" autocomplete="on">
+        <h3 class="form-section-title">بيانات التواصل</h3>
+        <div class="row">
+          <label>الاسم بالكامل<input type="text" id="customerName" name="name" autocomplete="name" placeholder="مثال: محمد أحمد" required /></label>
+          <label>رقم الموبايل<input type="tel" id="customerPhone" name="phone" autocomplete="tel" inputmode="tel" placeholder="01xxxxxxxxx" required /></label>
+        </div>
+        <h3 class="form-section-title">عنوان التوصيل</h3>
+        <div class="row">
+          <label>المحافظة
+            <select id="customerGovernorate" name="governorate" autocomplete="address-level1" required>
+              <option value="">اختر المحافظة</option>
+              <option value="القاهرة">القاهرة</option>
+              <option value="الجيزة">الجيزة</option>
+              <option value="الإسكندرية">الإسكندرية</option>
+              <option value="القليوبية">القليوبية</option>
+              <option value="البحيرة">البحيرة</option>
+              <option value="مطروح">مطروح</option>
+              <option value="دمياط">دمياط</option>
+              <option value="الدقهلية">الدقهلية</option>
+              <option value="كفر الشيخ">كفر الشيخ</option>
+              <option value="الغربية">الغربية</option>
+              <option value="المنوفية">المنوفية</option>
+              <option value="الشرقية">الشرقية</option>
+              <option value="الإسماعيلية">الإسماعيلية</option>
+              <option value="بورسعيد">بورسعيد</option>
+              <option value="السويس">السويس</option>
+              <option value="شمال سيناء">شمال سيناء</option>
+              <option value="جنوب سيناء">جنوب سيناء</option>
+              <option value="بني سويف">بني سويف</option>
+              <option value="الفيوم">الفيوم</option>
+              <option value="المنيا">المنيا</option>
+              <option value="أسيوط">أسيوط</option>
+              <option value="سوهاج">سوهاج</option>
+              <option value="قنا">قنا</option>
+              <option value="الأقصر">الأقصر</option>
+              <option value="أسوان">أسوان</option>
+            </select>
+          </label>
+          <label>المدينة أو المركز<input type="text" id="customerCity" name="city" autocomplete="address-level2" placeholder="اكتب المدينة أو المركز" required /></label>
+          <label>العنوان بالتفصيل<input type="text" id="customerAddress" name="address" autocomplete="street-address" placeholder="الشارع، رقم العقار، علامة مميزة" required /></label>
+        </div>
+        <p class="form-hint" id="shippingFeeHint" role="status" aria-live="polite">الشحن مجاني داخل بني سويف، ومن 50 إلى 100 جنيه حسب المحافظة.</p>
+        <h3 class="form-section-title">خيارات الطلب</h3>
+        <div class="row">
+          <label>طريقة الاستلام<select id="shippingMethod" name="shipping"><option value="توصيل سريع">توصيل سريع</option><option value="توصيل عادي">توصيل عادي</option><option value="استلام من المتجر">استلام من المتجر</option></select></label>
+          <label>طريقة الدفع<select id="paymentMethod" name="payment"><option value="الدفع عند الاستلام">الدفع عند الاستلام</option><option value="انستا باي">إنستا باي</option><option value="فودافون كاش">فودافون كاش</option></select></label>
+        </div>
+        <label>ملاحظات إضافية (اختياري)<textarea id="customerNote" name="note" placeholder="أي تفاصيل تساعدنا في تجهيز طلبك..."></textarea></label>
+        <button class="submit-btn" id="submitOrderBtn" type="submit">تأكيد الطلب</button>
+      </form>
+      <p class="form-hint" id="orderError" role="alert" hidden></p>
+      <div class="order-success" id="orderSuccess" role="status" aria-live="polite" hidden>
+        <h3>تم تسجيل طلبك بنجاح</h3>
+        <p>رقم الطلب: <strong id="confirmedOrderId"></strong>. يمكنك البقاء في هذه الصفحة أو إرسال تفاصيل الطلب عبر واتساب.</p>
+        <div class="success-actions">
+          <a id="sendOrderWhatsApp" href="#" target="_blank" rel="noopener">إرسال التفاصيل عبر واتساب</a>
+          <a class="continue-link" href="index.html">العودة للتسوق</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const CART_KEY = 'elvynCart';
+    const WHATSAPP_NUMBER = '201030208245';
+
+    function getCart() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+        return Array.isArray(stored) ? stored : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function updateBackendStatus() {
+      const status = document.getElementById('backendStatus');
+      if (window.elvynBackend.configured) return;
+      status.textContent = 'المتجر في وضع المعاينة؛ أكمل إعداد قاعدة البيانات قبل إرسال الطلبات.';
+      status.hidden = false;
+    }
+
+    function saveCart(items) {
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[character]);
+    }
+
+    function getDeliveryShippingFee(governorate, shippingMethod) {
+      if (shippingMethod === 'استلام من المتجر') return 0;
+      if (!governorate) return null;
+      if (governorate === 'بني سويف') return 0;
+
+      const shippingFees = {
+        'الفيوم': 50,
+        'القاهرة': 70, 'الجيزة': 70, 'المنيا': 70,
+        'القليوبية': 80, 'المنوفية': 80, 'الشرقية': 80, 'الغربية': 80,
+        'البحيرة': 90, 'دمياط': 90, 'الدقهلية': 90, 'كفر الشيخ': 90,
+        'الإسماعيلية': 90, 'بورسعيد': 90, 'السويس': 90, 'أسيوط': 90,
+        'الإسكندرية': 100, 'مطروح': 100, 'شمال سيناء': 100, 'جنوب سيناء': 100,
+        'سوهاج': 100, 'قنا': 100, 'الأقصر': 100, 'أسوان': 100
+      };
+      return shippingFees[governorate] ?? null;
+    }
+
+    function updateShippingFeeHint() {
+      const governorate = document.getElementById('customerGovernorate').value;
+      const method = document.getElementById('shippingMethod').value;
+      const fee = getDeliveryShippingFee(governorate, method);
+      const hint = document.getElementById('shippingFeeHint');
+      if (method === 'استلام من المتجر') {
+        hint.textContent = 'الاستلام من المتجر بدون رسوم شحن.';
+      } else if (!governorate) {
+        hint.textContent = 'اختر المحافظة لحساب تكلفة الشحن.';
+      } else if (fee === 0) {
+        hint.textContent = 'الشحن إلى بني سويف مجاني.';
+      } else {
+        hint.textContent = `تكلفة الشحن إلى ${governorate}: ${fee} جنيه.`;
+      }
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      const container = document.getElementById('cartItems');
+      const subtotalEl = document.getElementById('subtotal');
+      const shippingEl = document.getElementById('shippingFee');
+      const totalEl = document.getElementById('total');
+      const submitButton = document.getElementById('submitOrderBtn');
+      const governorate = document.getElementById('customerGovernorate').value;
+      const shippingMethod = document.getElementById('shippingMethod').value;
+      const shipping = getDeliveryShippingFee(governorate, shippingMethod) ?? 0;
+      shippingEl.textContent = governorate || shippingMethod === 'استلام من المتجر'
+        ? shipping + ' جنيه'
+        : 'اختر المحافظة';
+
+      if (!cart.length) {
+        container.innerHTML = '<div class="empty-state">السلة فارغة الآن، يمكنك العودة للتسوق.</div>';
+        subtotalEl.textContent = '0 جنيه';
+        shippingEl.textContent = '0 جنيه';
+        totalEl.textContent = '0 جنيه';
+        submitButton.disabled = true;
+        return;
+      }
+      submitButton.disabled = false;
+
+      const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1), 0);
+      const total = subtotal + shipping;
+
+      container.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div>
+            <strong>${escapeHtml(item.name)}</strong>
+            <span>${Number(item.quantity || 1)} × ${Number(item.price || 0)} جنيه</span>
+          </div>
+          <button type="button" class="remove-btn" data-id="${escapeHtml(item.id)}">حذف</button>
+        </div>
+      `).join('');
+
+      subtotalEl.textContent = subtotal + ' جنيه';
+      totalEl.textContent = total + ' جنيه';
+
+      document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const updated = getCart().filter(item => Number(item.id) !== Number(button.dataset.id));
+          saveCart(updated);
+          renderCart();
+        });
+      });
+    }
+
+    async function confirmOrder(orderData) {
+      const cart = getCart();
+      if (!cart.length) {
+        alert('السلة فارغة ولا يوجد طلب لإرساله.');
+        return;
+      }
+
+      const submitButton = document.getElementById('submitOrderBtn');
+      const error = document.getElementById('orderError');
+      error.hidden = true;
+      submitButton.disabled = true;
+
+      try {
+        if (!window.elvynBackend.configured) {
+          throw new Error('إعدادات قاعدة البيانات غير مكتملة. لا يمكن تسجيل الطلب الآن.');
+        }
+        const createdOrder = await window.elvynBackend.api.createOrder(orderData, cart);
+        const text = [
+          'مرحبًا، أود تأكيد الطلب التالي من ELVYN:',
+          'رقم الطلب: ' + createdOrder.id,
+          'الاسم: ' + orderData.name,
+          'رقم الهاتف: ' + orderData.phone,
+          'المحافظة: ' + orderData.governorate,
+          'المدينة: ' + orderData.city,
+          'العنوان: ' + orderData.address,
+          'طريقة الشحن: ' + orderData.shipping,
+          'طريقة الدفع: ' + orderData.payment,
+          'الطلب:',
+          createdOrder.items.map(item => `${item.name} - ${item.quantity} × ${item.price} جنيه`).join('\n'),
+          'المجموع: ' + createdOrder.subtotal + ' جنيه',
+          'الشحن: ' + createdOrder.shipping_fee + ' جنيه',
+          'الإجمالي: ' + createdOrder.total + ' جنيه',
+          orderData.note ? 'ملاحظات: ' + orderData.note : ''
+        ].filter(Boolean).join('\n');
+
+        saveCart([]);
+        renderCart();
+        document.getElementById('confirmedOrderId').textContent = String(createdOrder.id);
+        document.getElementById('sendOrderWhatsApp').href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+        document.getElementById('orderForm').hidden = true;
+        document.getElementById('orderSuccess').hidden = false;
+      } catch (submitError) {
+        console.error('Unable to submit the order:', submitError);
+        error.textContent = submitError.message || 'تعذر تسجيل الطلب. حاول مرة أخرى.';
+        error.hidden = false;
+        submitButton.disabled = false;
+      }
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const cart = getCart();
+      if (!cart.length) {
+        alert('السلة فارغة.');
+        return;
+      }
+
+      await confirmOrder({
+        name: document.getElementById('customerName').value.trim(),
+        phone: document.getElementById('customerPhone').value.trim(),
+        governorate: document.getElementById('customerGovernorate').value,
+        city: document.getElementById('customerCity').value.trim(),
+        address: document.getElementById('customerAddress').value.trim(),
+        shipping: document.getElementById('shippingMethod').value,
+        payment: document.getElementById('paymentMethod').value,
+        note: document.getElementById('customerNote').value.trim()
+      });
+    });
+
+    document.getElementById('customerGovernorate').addEventListener('change', () => {
+      updateShippingFeeHint();
+      updateBackendStatus();
+      renderCart();
+    });
+    document.getElementById('shippingMethod').addEventListener('change', () => {
+      updateShippingFeeHint();
+      renderCart();
+    });
+
+    updateShippingFeeHint();
+    renderCart();
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 560" role="img" aria-labelledby="title description">
+  <title id="title">Home essentials</title><desc id="description">A cozy living space with a lamp, plant, and vase.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4e9dd"/><stop offset="1" stop-color="#e1d3c1"/></linearGradient><linearGradient id="lamp" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff9ee"/><stop offset="1" stop-color="#d6b996"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#594b3d" flood-opacity=".16"/></filter></defs>
+  <rect width="480" height="560" rx="32" fill="url(#bg)"/><path d="M0 414h480v146H0z" fill="#c9b49b"/><path d="M0 420c117-28 252 12 480-9" fill="none" stroke="#f8f0e4" stroke-width="5"/>
+  <text x="38" y="55" fill="#7b654f" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="3">A PLACE TO UNWIND</text>
+  <g filter="url(#s)"><path d="M146 137h154l-25 99H171z" fill="url(#lamp)"/><path d="M222 236v153" stroke="#856f58" stroke-width="12" stroke-linecap="round"/><path d="M172 389h101l20 19H151z" fill="#826c55"/><path d="M172 180h102" stroke="#fff" stroke-width="4" opacity=".55"/><path d="M325 346c-10-71 10-118 54-147 7 54-3 109-37 149" fill="#658169"/><path d="M359 348c-5-65 17-107 62-127 2 55-14 100-50 132" fill="#82977a"/><path d="M321 346c-3-50-26-82-70-97 3 50 23 83 65 104" fill="#8ca083"/><path d="M310 337h90l-10 80h-70z" fill="#b98362"/><path d="M334 351h44" stroke="#d5ad8f" stroke-width="3"/></g>
+  <text x="38" y="515" fill="#655746" font-family="Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="2">MAKE ROOM FOR GOOD</text>
+</svg>

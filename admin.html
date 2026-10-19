@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#123235" />
+    <title>لوحة إدارة ELVYN</title>
+    <link rel="stylesheet" href="styles/admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts/supabase-config.js"></script>
+    <script src="scripts/supabase-client.js"></script>
+    <script src="scripts/admin.js" defer></script>
+</head>
+<body>
+    <main class="page">
+        <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
+        <section class="login-card card" id="loginPanel">
+            <a class="brand" href="index.html">ELVYN</a>
+            <p class="eyebrow">مساحة خاصة بفريق المتجر</p>
+            <h1>تسجيل الدخول للوحة الإدارة</h1>
+            <p class="muted">استخدم حساب الأدمن الذي أنشأته.</p>
+            <form id="loginForm" class="form">
+                <label>البريد الإلكتروني
+                    <input id="loginEmail" type="email" autocomplete="username" required />
+                </label>
+                <label>كلمة المرور
+                    <input id="loginPassword" type="password" autocomplete="current-password" required />
+                </label>
+                <button class="button primary" type="submit">تسجيل الدخول</button>
+            </form>
+        </section>
+
+        <section id="dashboard" hidden>
+            <header class="topbar">
+                <div>
+                    <a class="brand" href="index.html">ELVYN</a>
+                    <p class="muted">لوحة إدارة المتجر</p>
+                </div>
+                <div class="top-actions">
+                    <a class="button secondary" href="index.html">عرض المتجر</a>
+                    <button class="button secondary" id="signOutButton" type="button">تسجيل الخروج</button>
+                </div>
+            </header>
+
+            <section class="stats-grid" aria-label="ملخص المتجر">
+                <article class="stat card"><span>إجمالي الطلبات</span><strong id="totalOrders">—</strong></article>
+                <article class="stat card"><span>طلبات جديدة</span><strong id="newOrders">—</strong></article>
+                <article class="stat card"><span>إجمالي المبيعات المسلّمة</span><strong id="deliveredRevenue">—</strong></article>
+                <article class="stat card"><span>منتجات ظاهرة</span><strong id="activeProducts">—</strong></article>
+            </section>
+
+            <section class="card section-card" id="ordersSection">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">متابعة المبيعات</p>
+                        <h2>الطلبات</h2>
+                    </div>
+                    <button class="button secondary" id="refreshButton" type="button">تحديث البيانات</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>الطلب</th><th>العميل</th><th>التوصيل</th><th>الإجمالي</th><th>الحالة</th><th>التفاصيل</th></tr></thead>
+                        <tbody id="ordersTable"><tr><td colspan="6">جارٍ تحميل الطلبات...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card section-card" id="productsSection">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">إضافة وتعديل وإخفاء</p>
+                        <h2>المنتجات</h2>
+                    </div>
+                </div>
+                <form id="productForm" class="form product-form">
+                    <input id="productId" type="hidden" />
+                    <label>اسم المنتج<input id="productName" maxlength="160" required /></label>
+                    <label>الفئة
+                        <select id="productCategory" required>
+                            <option value="electronics">إلكترونيات</option>
+                            <option value="home">المنزل</option>
+                            <option value="grocery">السوبرماركت</option>
+                            <option value="beauty">جمال وعناية</option>
+                            <option value="sports">رياضة</option>
+                            <option value="men">رجال</option>
+                            <option value="women">أزياء نسائية</option>
+                            <option value="kids">الأطفال</option>
+                            <option value="accessories">إكسسوارات</option>
+                        </select>
+                    </label>
+                    <label>السعر بالجنيه<input id="productPrice" type="number" min="0.01" step="0.01" required /></label>
+                    <label>صورة المنتج<input id="productImage" type="file" accept="image/jpeg,image/png,image/webp,image/avif" /></label>
+                    <label class="wide">أو رابط صورة HTTPS
+                        <input id="productImageUrl" type="url" placeholder="https://example.com/image.jpg" />
+                        <span class="muted">اتركه فارغًا عند التعديل للإبقاء على الصورة الحالية.</span>
+                    </label>
+                    <label class="checkbox-label"><input id="productDeal" type="checkbox" /> صفقة اليوم</label>
+                    <div class="form-actions wide">
+                        <button class="button primary" id="saveProductButton" type="submit">إضافة المنتج</button>
+                        <button class="button secondary" id="cancelEditButton" type="button" hidden>إلغاء التعديل</button>
+                    </div>
+                </form>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>المنتج</th><th>الفئة</th><th>السعر</th><th>الحالة</th><th>صفقة اليوم</th><th>إجراءات</th></tr></thead>
+                        <tbody id="productsTable"><tr><td colspan="6">جارٍ تحميل المنتجات...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card section-card" id="dealsSection">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">إعدادات العروض</p>
+                        <h2>خصم صفقة اليوم</h2>
+                    </div>
+                </div>
+                <form id="dealForm" class="deal-form">
+                    <label for="dealDiscount">نسبة الخصم (%)</label>
+                    <input id="dealDiscount" type="number" min="0" max="100" step="0.1" required />
+                    <button class="button primary" type="submit">حفظ الخصم</button>
+                </form>
+                <p class="muted">يُطبّق الخصم على المنتجات المحددة كصفقة اليوم.</p>
+            </section>
+        </section>
+    </main>
+</body>
+</html>

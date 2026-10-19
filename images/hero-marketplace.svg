@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 820" role="img" aria-labelledby="title description">
+  <title id="title">ELVYN, everything in one place</title>
+  <desc id="description">A curated collection of everyday shopping essentials, including a phone, home lamp, skincare, sneakers, and a gift bag.</desc>
+  <defs>
+    <linearGradient id="back" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#e5eee8"/>
+      <stop offset=".55" stop-color="#f7eee3"/>
+      <stop offset="1" stop-color="#dfcec0"/>
+    </linearGradient>
+    <linearGradient id="phone" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#253f40"/>
+      <stop offset="1" stop-color="#101e25"/>
+    </linearGradient>
+    <linearGradient id="bag" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#c78c62"/>
+      <stop offset="1" stop-color="#986541"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#e9c59c"/>
+      <stop offset="1" stop-color="#c98c68"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#354139" flood-opacity=".17"/>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#354139" flood-opacity=".12"/>
+    </filter>
+    <clipPath id="crop"><rect width="900" height="820" rx="30"/></clipPath>
+  </defs>
+  <g clip-path="url(#crop)">
+    <rect width="900" height="820" fill="url(#back)"/>
+    <circle cx="179" cy="183" r="133" fill="#c5d8ce" opacity=".68"/>
+    <circle cx="772" cy="190" r="96" fill="#ead6c1" opacity=".68"/>
+    <path d="M0 606c174-53 336-6 479 10 150 16 283-45 421-23v227H0z" fill="#cdbba7"/>
+    <path d="M0 635c201-52 331-12 482 5 142 16 273-40 418-23" fill="none" stroke="#f4e8da" stroke-width="4" opacity=".8"/>
+    <ellipse cx="455" cy="659" rx="303" ry="39" fill="#4b554a" opacity=".15"/>
+    <text x="64" y="78" fill="#466057" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="5">ELVYN  /  CURATED FOR EVERY DAY</text>
+    <!-- Smart device -->
+    <g transform="rotate(-8 330 354)" filter="url(#shadow)">
+      <rect x="255" y="163" width="158" height="337" rx="27" fill="url(#phone)"/>
+      <rect x="265" y="177" width="138" height="308" rx="18" fill="#e8eee8"/>
+      <rect x="313" y="184" width="52" height="9" rx="5" fill="#243638"/>
+      <circle cx="334" cy="292" r="44" fill="#d8e5db"/>
+      <path d="M294 303c14-36 31-54 51-54 17 0 31 12 46 42-23-7-45-3-65 15-10 9-20 9-32-3z" fill="#7c9c87"/>
+      <text x="285" y="377" fill="#3b5146" font-family="Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="2">EVERYDAY</text>
+      <text x="285" y="400" fill="#748379" font-family="Arial, sans-serif" font-size="11">A little more you.</text>
+      <rect x="286" y="421" width="96" height="25" rx="12" fill="#34564b"/>
+    </g>
+    <!-- Home lamp -->
+    <g filter="url(#soft)">
+      <path d="M603 248h139l-24 91H627z" fill="#f5ead9"/>
+      <path d="M667 339v178" stroke="#8d7158" stroke-width="12" stroke-linecap="round"/>
+      <path d="M618 517h98l20 18H598z" fill="#927457"/>
+      <path d="M620 289h103" stroke="#dfcbb2" stroke-width="3"/>
+      <circle cx="671" cy="365" r="8" fill="#bf956e"/>
+    </g>
+    <!-- Skincare bottles -->
+    <g filter="url(#soft)">
+      <rect x="447" y="439" width="56" height="143" rx="15" fill="url(#glass)"/>
+      <rect x="458" y="423" width="34" height="23" rx="5" fill="#826d57"/>
+      <rect x="514" y="476" width="51" height="106" rx="14" fill="#e8dbc7"/>
+      <rect x="527" y="460" width="26" height="22" rx="5" fill="#9c805f"/>
+      <path d="M458 504h34" stroke="#fff6eb" stroke-width="3" opacity=".8"/>
+      <path d="M526 521h27" stroke="#b6a188" stroke-width="3"/>
+      <text x="451" y="551" fill="#725c48" font-family="Arial, sans-serif" font-size="9" letter-spacing="1">GLOW</text>
+    </g>
+    <!-- Shopper -->
+    <g filter="url(#shadow)">
+      <path d="M112 440h159l-12 176H127z" fill="url(#bag)"/>
+      <path d="M148 451v-35c0-44 18-67 45-67s45 23 45 67v35" fill="none" stroke="#79583f" stroke-width="12"/>
+      <path d="M127 478h137" stroke="#d8ab84" stroke-width="4"/>
+      <text x="152" y="547" fill="#f7ead8" font-family="Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="4">ELVYN</text>
+    </g>
+    <!-- Sneaker -->
+    <g transform="rotate(-8 450 620)" filter="url(#soft)">
+      <path d="M326 600c38-8 63-33 84-77 8-18 27-21 40-8l55 52c16 15 43 22 68 29l49 14c19 6 27 20 20 36-5 12-18 18-37 17l-244-4c-31 0-48-13-43-34z" fill="#f6f3eb"/>
+      <path d="M330 651h304c13 0 21 8 18 18-2 8-12 13-25 13H348c-20 0-31-11-25-31z" fill="#536a60"/>
+      <path d="M459 537l44 54M478 528l39 52M499 527l35 43" stroke="#c28c6b" stroke-width="6" stroke-linecap="round"/>
+      <path d="M373 603c20 7 42 8 64 5" stroke="#cfbea9" stroke-width="3"/>
+    </g>
+    <g filter="url(#soft)">
+      <circle cx="790" cy="450" r="38" fill="#fffaf3"/>
+      <path d="M790 427v46M767 450h46" stroke="#b78861" stroke-width="3"/>
+    </g>
+  </g>
+</svg>
